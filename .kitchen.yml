@@ -1,0 +1,60 @@
+---
+
+# Kitchen test file for AWS EC2.
+
+################################################################################
+# Many of the parameters in this file were used for initial testing and        #
+# should be made current for future testing. (AMIs change, the S3 source files #
+# are no longer present, etc.) Pleasse update as necessary.                    #
+################################################################################
+
+driver:
+  name: ec2
+  aws_ssh_key_id: kitchen
+  region: us-west-1
+  security_group_ids: ["sg-88c4dbed"]
+  availability_zone: b
+  instance_type: t2.micro
+  # require_chef_omnibus: true
+  # subnet_id: subnet-6e5d4c3b
+  # iam_profile_name: kitchen
+  # associate_public_ip: true
+  # interface: dns
+
+transport:
+  ssh_key: c:\crepo\secret\kitchen
+  connection_timeout: 10
+  connection_retries: 5
+
+provisioner:
+  name: chef_zero
+
+platforms:
+  - name: windows-2012-r2
+    driver:
+      image_id: ami-95fd8bf5
+  - name: windows-2012
+    driver:
+      image_id: ami-60f88e00
+  - name: windows-2008-r2
+    driver:
+      image_id: ami-d7fa8cb7
+  - name: windows-2008-r2
+    driver:
+      image_id: ami-0bfd8b6b
+
+suites:
+  - name: hc101
+    run_list:
+      - recipe[hana_client]
+    attributes:
+      sap:
+        sapcar: "https://s3-us-west-1.amazonaws.com/sap-opensource-demo/SAPCAR.EXE"
+        hanaclient: "https://s3-us-west-1.amazonaws.com/sap-opensource-demo/SAP_HANA_CLIENT100_101_Windows_Server_on_x86_64.SAR"
+  - name: hc102
+    run_list:
+      - recipe[hana_client]
+    attributes:
+      sap:
+        sapcar: "https://s3-us-west-1.amazonaws.com/sap-opensource-demo/SAPCAR.EXE"
+        hanaclient: "https://s3-us-west-1.amazonaws.com/sap-opensource-demo/SAP_HANA_CLIENT100_102_Windows_Server_on_x86_64.SAR"
