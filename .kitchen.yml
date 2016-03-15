@@ -1,28 +1,39 @@
 ---
-
-# Kitchen test file for AWS EC2.
+#
+# Cookbook Name:: hana_client
+# Kitchen:: EC2 Windows
+#
+# Copyright 2016, SAP
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
 
 ################################################################################
 # Many of the parameters in this file were used for initial testing and        #
 # should be made current for future testing. (AMIs change, the S3 source files #
-# are no longer present, etc.) Pleasse update as necessary.                    #
+# are no longer present, etc.) Please update as necessary.                     #
 ################################################################################
 
 driver:
   name: ec2
-  aws_ssh_key_id: kitchen
+  aws_ssh_key_id: test-kitchen
   region: us-west-1
   security_group_ids: ["sg-88c4dbed"]
-  availability_zone: b
+  availability_zone: c
   instance_type: t2.micro
-  # require_chef_omnibus: true
-  # subnet_id: subnet-6e5d4c3b
-  # iam_profile_name: kitchen
-  # associate_public_ip: true
-  # interface: dns
 
 transport:
-  ssh_key: c:\crepo\secret\kitchen
+  ssh_key: c:\crepo\secrets\test-kitchen.pem
   connection_timeout: 10
   connection_retries: 5
 
@@ -39,7 +50,7 @@ platforms:
   - name: windows-2008-r2
     driver:
       image_id: ami-d7fa8cb7
-  - name: windows-2008-r2
+  - name: windows-2008
     driver:
       image_id: ami-0bfd8b6b
 
@@ -51,10 +62,3 @@ suites:
       sap:
         sapcar: "https://s3-us-west-1.amazonaws.com/sap-opensource-demo/SAPCAR.EXE"
         hanaclient: "https://s3-us-west-1.amazonaws.com/sap-opensource-demo/SAP_HANA_CLIENT100_101_Windows_Server_on_x86_64.SAR"
-  - name: hc102
-    run_list:
-      - recipe[hana_client]
-    attributes:
-      sap:
-        sapcar: "https://s3-us-west-1.amazonaws.com/sap-opensource-demo/SAPCAR.EXE"
-        hanaclient: "https://s3-us-west-1.amazonaws.com/sap-opensource-demo/SAP_HANA_CLIENT100_102_Windows_Server_on_x86_64.SAR"

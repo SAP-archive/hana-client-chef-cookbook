@@ -1,4 +1,8 @@
-# Copyright 2016, SAP SE
+#
+# Cookbook Name:: hana_client
+# Resource:: sap_media
+#
+# Copyright 2016, SAP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.

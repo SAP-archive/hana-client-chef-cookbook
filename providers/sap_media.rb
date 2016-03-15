@@ -1,3 +1,22 @@
+#
+# Cookbook Name:: hana_client
+# Providers:: sap_media
+#
+# Copyright 2016, SAP
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
 action :extract do
   #######################
   ## Collect Variables ##
@@ -14,7 +33,7 @@ action :extract do
   sar_file = sar_url.split('/')[-1]
   # Where to put the extracted contents
   sar_extract_dir = new_resource.extractDir
-  # The path to the loac copy of the SAR
+  # The path to the local copy of the SAR
   local_sar = "#{Chef::Config[:file_cache_path]}/#{sar_file}"
 
   ########################
@@ -23,7 +42,7 @@ action :extract do
 
   remote_file "#{sapcar_dir}/#{sapcar_ex}" do
     source new_resource.sapcar
-    mode 00755
+    mode 0755
     action :create_if_missing
   end
 
@@ -35,25 +54,6 @@ action :extract do
     mode 0755
     action :create_if_missing
   end
-
-  ##########################
-  ## Remove this section  ##
-  ##########################
-#
-#    extractDir_array = new_resource.extractDir.split(/[\/\\]/)
-#    # A file in the root -1 of the extrat directory vv
-#    idxfile = extractDir_array[0..extractDir_array.size-2].join('/')+"/LABELIDX.ASC"
-#    # Prepare for search
-#    search_path = new_resource.extractDir.tr("/","\\/")
-#
-#    # Touches the file (idxfile)
-#    ruby_block "Touching #{idxfile}" do
-#      block do
-#        FileUtils.mkdir_p(File.dirname(idxfile))
-#        FileUtils.touch(idxfile)
-#      end
-#    end
-#
 
   ##########################
   ## Extract the package  ##
@@ -68,16 +68,6 @@ action :extract do
   execute "Extract media #{sar_file} to #{sar_extract_dir}" do
     command "#{sapcar_ex} -xf #{local_sar} -R #{sar_extract_dir}"
   end
-
-#  Updates the file with the location of the extraction
-  # ruby_block "Updating LABELIDX.ASC" do
-    # block do
-      # File.open(idxfile, 'a') do |file|
-        # file.puts new_resource.extractDir
-      # end
-    # end
-    # not_if { ::File.readlines(idxfile).grep(/^#{search_path}$/).any? }
-  # end
 
   #####################
   ## Cleanup the SAR ##

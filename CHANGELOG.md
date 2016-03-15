@@ -3,9 +3,9 @@ hana_client CHANGELOG
 
 This file is used to list changes made in each version of the hana_client cookbook.
 
-0.1.0
+1.0.0
 -----
-- [your_name] - Initial release of hana_client
+- [Dan-Joe] - Initial public release of hana_client.
 
 - - -
 Check the [Markdown Syntax Guide](http://daringfireball.net/projects/markdown/syntax) for help with Markdown.

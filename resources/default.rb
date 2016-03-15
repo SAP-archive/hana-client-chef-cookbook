@@ -1,4 +1,8 @@
-# Copyright 2016, SAP SE
+#
+# Cookbook Name:: hana_client
+# Resource:: default
+#
+# Copyright 2016, SAP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,6 +18,7 @@
 #
 
 actions :uninstall, :install
-default_action :uninstall
+default_action :install
 
-attribute :root_dir, :kind_of => String, :name_attribute => true
+attribute :name,        :kind_of => String, :name_attribute => true
+attribute :installer,   :kind_of => String

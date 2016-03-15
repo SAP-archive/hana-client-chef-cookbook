@@ -6,19 +6,16 @@ package.
 ## Supports
 
 This cookbooks supports the following windows versions, and has been tested on
-baremetal, AWS and Azure.
-- Windows Server
-  - 2008
-  - 2008 R2
-  - 2012
-  - 2012 R2
-  - 2016
-- Windows Desktop (pro edition)
-  - 7
-  - 7 SP1
-  - 8
-  - 8.1
-  - 10
+SAP's internal cloud and AWS as noted below.
+
+|            OS          | Internally Tested | AWS EC2 Tested |
+| ---------------------- | ----------------- | -------------- |
+| Windows Server 2008    |         ⃠        |        ✓       |
+| Windows Server 2008 R2 |         ✓        |        ✓       |
+| Windows Server 2012    |         ⃠        |        ✓       |
+| Windows Server 2012 R2 |         ✓        |        ✓       |
+| Windows Server 2016 TP |         ✓        |        ⃠       |
+| Windows 10             |         ✓        |        ⃠       |
 
 
 ## Attributes
@@ -40,31 +37,53 @@ These attributes are used to fine tune the installation.
 | `['hana_client']['root_install_folder']` | String  | This is where the hana client will live on your system.                       | `c:\\sap` |
 | `['hana_client']['uninstall_resintall']` | Boolean | Signals the removal of any existing hana clients in the `root_install_folder` | `false`   |
 
-## LWRPs
-### sap_media
-Use `sap_media` to extract an SAP SAR file to a specific location.
+## Resource/Provider
+### hana_client
+#### Actions
+ - `:install`
+ - `:uninstall`
+
+Use the actions to install or remove an installation of the client to or from
+the specified location.  `uninstall` removes any HANA client(s) found in the
+root path.
+#### Example
+```ruby
+hana_client "C:\\Root\\Path\\To\\Install\\hana_client\\" do
+  installer "C:\\Path\\To\\Extracted\\Installer\\hdbinst.exe"
+  action :install
+end
+```
+```ruby
+hana_client "C:\\Root\\Path\\To\\Find\\hana_client\\" do
+  action :uninstall
+end
+```
+### hana_client_sap_media
+Use `hana_client_sap_media` to extract an SAP SAR file to a specific location.
+#### Example
 ```ruby
 hana_client_sap_media "Source.SAR" do
   remote_path "Destination for extracted files"
   sapcar "URL://of.SAPCAR/for/extraction"
 end
 ```
-### uninstall
-Use uninstall to remove an installation of the client form the specified
-location.
-```ruby
-hana_client_sap_media "Source.SAR" do
-  remote_path "Destination for extracted files"
-  sapcar "URL://of.SAPCAR/for/extraction"
-end
-```
-### upgrade
 
 ## Usage
+Feel free to use this cookbook in whole or in part as described below!
+
 ### hana_client::default
+So you want to install the HANA client?
+1. Depend on me (in your `metadata.rb`).
+```ruby
+depends 'hana_client'
+```
 
-Just include `hana_client` in your node's `run_list`:
+- Collect your files (SAPCAR.exe and the SAR package with the client version
+you want), and tell me where to find them (using attributes).
+ - [OPTIONAL]: Change the default installation directory.
+ - [OPTIONAL]: Set the reinstall flag to remove any previous client.
 
+- Include `hana_client` in your node's `run_list`:
 ```json
 {
   "name":"my_node",
@@ -76,14 +95,32 @@ Just include `hana_client` in your node's `run_list`:
 
 Contributing
 ------------
+Contributions are welcomed!
 
-1. Fork the repository on Github
-2. Create a named feature branch (like `add_component_x`)
-3. Write you change
-4. Write tests for your change (if applicable)
-5. Run the tests, ensuring they all pass
-6. Submit a Pull Request using Github
+1. Fork the repo
+2. Create a feature branch (like `add_component_x`)
+3. Write your change
+4. Test your change
+5. Submit a Pull Request using Github
 
 License and Authors
 -------------------
-Authors: Emmanuel Iturbide (e.iturbide@sap.com)
+Authors:
+- Emmanuel Iturbide (e.iturbide@sap.com)
+- Dan-Joe Lopez (Dan-Joe.Lopez@sap.com)
+
+License:
+
+Copyright 2016, SAP
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
