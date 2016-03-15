@@ -1,6 +1,6 @@
 ---
 #
-# Cookbook Name:: hana_client
+# Cookbook Name:: hana-client
 # Kitchen:: EC2 Windows
 #
 # Copyright 2016, SAP
@@ -33,7 +33,7 @@ driver:
   instance_type: t2.micro
 
 transport:
-  ssh_key: c:\crepo\secrets\test-kitchen.pem
+  ssh_key: c:\chef\secrets\test-kitchen.pem
   connection_timeout: 10
   connection_retries: 5
 
@@ -57,7 +57,7 @@ platforms:
 suites:
   - name: hc101
     run_list:
-      - recipe[hana_client]
+      - recipe[hana-client]
     attributes:
       sap:
         sapcar: "https://s3-us-west-1.amazonaws.com/sap-opensource-demo/SAPCAR.EXE"

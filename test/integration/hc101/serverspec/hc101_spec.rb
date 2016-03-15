@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: hana_client
+# Cookbook Name:: hana-client
 # Test:: default
 #
 # Copyright 2016, SAP
@@ -22,7 +22,7 @@ require 'serverspec'
 set :backend, :cmd
 
 describe file('c:\\Windows\\SAPCAR.EXE') do
-  it  { should be_file }
+  it { should be_file }
 end
 
 describe file('c:\\SAP') do
@@ -30,5 +30,5 @@ describe file('c:\\SAP') do
 end
 
 describe file('c:\\SAP\\hdbclient\\install\\hdbuninst.exe') do
-  it  { should be_file }
+  it { should be_file }
 end

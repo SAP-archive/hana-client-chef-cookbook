@@ -1,6 +1,6 @@
 #
-# Cookbook Name:: hana_client
-# Providers:: default
+# Cookbook Name:: hana-client
+# Providers:: uninstall
 #
 # Copyright 2016, SAP
 #
@@ -17,21 +17,23 @@
 # limitations under the License.
 #
 
+use_inline_resources
+
 action :uninstall do
   if ::Dir.exist?(new_resource.name)
-       ::Dir.open(new_resource.name).each do |dir|
-            batch "uninstall #{dir}" do
-              code "\"#{new_resource.name}\\#{dir}\\install\\hdbuninst.exe\" --batch --path=\"#{new_resource.name}\\#{dir}\""
-              only_if { ::File.exist?("#{new_resource.name}\\#{dir}\\install\\hdbuninst.exe") && dir["hdbclient"] != nil }
-            end # end batch
-        end # end each
-    end  # end if
-end #end action
+    ::Dir.open(new_resource.name).each do |dir|
+      batch "uninstall #{dir}" do
+        code "\"#{new_resource.name}\\#{dir}\\install\\hdbuninst.exe\" --batch --path=\"#{new_resource.name}\\#{dir}\""
+        only_if { ::File.exist?("#{new_resource.name}\\#{dir}\\install\\hdbuninst.exe") && !dir['hdbclient'].nil? }
+      end # end batch
+    end # end each
+  end # end if
+end # end action
 
 action :install do
-  execute "Install HANA Client" do
+  execute "Install HANA Client: #{new_resource.name}" do
     command "#{new_resource.installer} --batch --path=\"#{new_resource.name}\\hdbclient"
-    timeout 86400
+    timeout 86_400
     action :run
     not_if { ::File.exist?("#{new_resource.name}\\hdbclient\\install\\hdbuninst.exe") }
   end

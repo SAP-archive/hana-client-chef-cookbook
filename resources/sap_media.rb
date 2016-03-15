@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: hana_client
+# Cookbook Name:: hana-client
 # Resource:: sap_media
 #
 # Copyright 2016, SAP

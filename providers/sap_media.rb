@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: hana_client
+# Cookbook Name:: hana-client
 # Providers:: sap_media
 #
 # Copyright 2016, SAP
@@ -17,6 +17,8 @@
 # limitations under the License.
 #
 
+use_inline_resources
+
 action :extract do
   #######################
   ## Collect Variables ##
@@ -33,7 +35,7 @@ action :extract do
   sar_file = sar_url.split('/')[-1]
   # Where to put the extracted contents
   sar_extract_dir = new_resource.extractDir
-  # The path to the local copy of the SAR
+  # The path to the loac copy of the SAR
   local_sar = "#{Chef::Config[:file_cache_path]}/#{sar_file}"
 
   ########################
@@ -42,7 +44,7 @@ action :extract do
 
   remote_file "#{sapcar_dir}/#{sapcar_ex}" do
     source new_resource.sapcar
-    mode 0755
+    mode 00755
     action :create_if_missing
   end
 
