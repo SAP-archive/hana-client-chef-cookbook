@@ -19,15 +19,16 @@
 
 # Some vars for readability
 destination = node['hana-client']['root_install_folder']
-extract_to_dir = Chef::Config[:file_cache_path] + '\sap_temp'
-local_installer = extract_to_dir + '\SAP_HANA_CLIENT\hdbinst.exe'
+extract_to_dir = Chef::Config[:file_cache_path] + '/sap_temp'
+local_installer = extract_to_dir + '/SAP_HANA_CLIENT/hdbinst.exe'
 
 # Get current state
-pkg_extracted = ::Dir.exist?(extract_to_dir)
-installed = ::File.exist?("#{destination}\\hdbclient\\install\\hdbuninst.exe")
+extracted_client = extract_to_dir + '/SAP_HANA_CLIENT'
+uninstaller = "#{destination}/hdbclient/install/hdbuninst.exe"
 
 # If requested, uninistall previous HANA client versions.
-hana_client node['hana-client']['root_install_folder'] do
+hana_client 'Uninstall clients from ' + node['hana-client']['root_install_folder'] do
+  name node['hana-client']['root_install_folder']
   action :uninstall
   only_if { node['hana-client']['uninstall_reinstall'] }
 end
@@ -37,11 +38,12 @@ hana_client_sap_media extract_to_dir do
   remote_path node['sap']['hanaclient']
   sapcar node['sap']['sapcar']
   action :extract
-  not_if { pkg_extracted || installed }
+  not_if { ::Dir.exist?(extracted_client) || ::File.exist?(uninstaller) }
 end
 
 # Install the client from the extracted SAR
-hana_client destination do
+hana_client 'Install client to ' + destination do
+  name destination
   installer local_installer
   action :install
 end

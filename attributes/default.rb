@@ -31,7 +31,7 @@ default['sap']['hanaclient'] = nil
 #########################
 
 # This is where the hana client will live on your system.
-default['hana-client']['root_install_folder'] = 'c:\sap'
+default['hana-client']['root_install_folder'] = 'c:/sap'
 
 # Signals the removal of any existing hana clients in the install folder.
 default['hana-client']['uninstall_reinstall'] = false

@@ -44,7 +44,7 @@ action :extract do
 
   remote_file "#{sapcar_dir}/#{sapcar_ex}" do
     source new_resource.sapcar
-    mode 00755
+    mode 00755 unless node['platform_family'] == 'windows'
     action :create_if_missing
   end
 
@@ -53,7 +53,7 @@ action :extract do
   ######################
   remote_file local_sar do
     source sar_url
-    mode 0755
+    mode 0755 unless node['platform_family'] == 'windows'
     action :create_if_missing
   end
 
