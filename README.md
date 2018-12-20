@@ -30,15 +30,15 @@ another cookbook.
 |            Key          |   Type  |                                  Description                                  |  Default  |
 |-------------------------|---------|-------------------------------------------------------------------------------|-----------|
 | `['sap']['sapcar']`     | String  | The URL to the SAPCAR executable to be used for extracting the SAP package    | N/A       |
-| `['sap']['hanaclient']` | String  | The complete URL to the SAP SAR package for the HANA client to be installed   | N/A       |
+| `['hana-client']['package']` | String  | The complete URL to the SAP SAR package for the HANA client to be installed   | N/A       |
 
 ### Advanced & Optional
 These attributes are used to fine tune the installation.
 
 |                    Key                   |   Type  |                                  Description                                  |  Default  |
 |------------------------------------------|---------|-------------------------------------------------------------------------------|-----------|
-| `['hana-client']['root_install_folder']` | String  | This is where the HANA client will live on your system.                       | `c:\sap` |
-| `['hana-client']['uninstall_resintall']` | Boolean | Signals the removal of any existing HANA clients in the `root_install_folder` | `false`   |
+| `['hana-client']['destination']` | String  | This is where the HANA client will live on your system.                       | `c:\sap` |
+| `['hana-client']['uninstall_resintall']` | Boolean | Signals the removal of any existing HANA clients in the `destination` | `false`   |
 
 ## Resource/Provider
 ### hana-client
@@ -115,7 +115,7 @@ Contributions are welcomed!
 
 ### License
 
-Copyright 2016, SAP
+Copyright 2019, SAP
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

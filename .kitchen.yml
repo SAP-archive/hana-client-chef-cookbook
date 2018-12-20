@@ -1,9 +1,9 @@
 ---
 #
 # Cookbook Name:: hana-client
-# Kitchen:: EC2 Windows
+# Kitchen:: docker linux
 #
-# Copyright 2016, SAP
+# Copyright 2019, SAP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,41 +18,23 @@
 # limitations under the License.
 #
 
-################################################################################
-# Many of the parameters in this file were used for initial testing and        #
-# should be made current for future testing. (AMIs change, the S3 source files #
-# are no longer present, etc.) Please update as necessary.                     #
-################################################################################
-
 driver:
-  name: ec2
-  aws_ssh_key_id: test-kitchen
-  region: us-west-1
-  security_group_ids: ["sg-88c4dbed"]
-  availability_zone: c
-  instance_type: t2.micro
-
-transport:
-  ssh_key: c:\chef\secrets\test-kitchen.pem
-  connection_timeout: 10
-  connection_retries: 5
+  name: docker
 
 provisioner:
   name: chef_zero
+  product_name: chef
+  product_verion: 14
+
+verifier:
+  name: inspec
 
 platforms:
-  - name: windows-2012-r2
-    driver:
-      image_id: ami-95fd8bf5
-  - name: windows-2012
-    driver:
-      image_id: ami-60f88e00
-  - name: windows-2008-r2
-    driver:
-      image_id: ami-d7fa8cb7
-  - name: windows-2008
-    driver:
-      image_id: ami-0bfd8b6b
+  - name: ubuntu-14.04
+  - name: ubuntu-16.04
+  - name: opensuse-42.2
+  - name: centos-7
+  - name: centos-6
 
 suites:
   - name: hc101
@@ -60,5 +42,9 @@ suites:
       - recipe[hana-client]
     attributes:
       sap:
-        sapcar: "https://s3-us-west-1.amazonaws.com/sap-opensource-demo/SAPCAR.EXE"
-        hanaclient: "https://s3-us-west-1.amazonaws.com/sap-opensource-demo/SAP_HANA_CLIENT100_101_Windows_Server_on_x86_64.SAR"
+        sapcar: http://moo-repo.wdf.sap.corp:8080/static/lit/hana/newdb/SAPCAR #"https://s3-us-west-1.amazonaws.com/sap-opensource-demo/SAPCAR.EXE"
+      hana-client:
+        package: http://moo-repo.wdf.sap.corp:8080/static/lit/hana/newdb/1.0.101/SAP_HANA_CLIENT100_101_Linux_on_x86_64.SAR #"https://s3-us-west-1.amazonaws.com/sap-opensource-demo/SAP_HANA_CLIENT100_101_Windows_Server_on_x86_64.SAR"
+    verifier:
+      inspec_tests:
+        - test/smoke/hc101

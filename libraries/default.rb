@@ -1,8 +1,8 @@
 #
 # Cookbook Name:: hana-client
-# Test:: default
+# Kitchen:: hana-client::Helpers
 #
-# Copyright 2016, SAP
+# Copyright 2019, SAP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,18 +17,15 @@
 # limitations under the License.
 #
 
-require 'serverspec'
+# These helpers are used in both resources, just to make the code a little
+# easier to read.
 
-set :backend, :cmd
+module Helpers
+  def win?
+    node['os'] == 'windows'
+  end
 
-describe file('c:\\Windows\\SAPCAR.EXE') do
-  it { should be_file }
-end
-
-describe file('c:\\SAP') do
-  it { should be_directory }
-end
-
-describe file('c:\\SAP\\hdbclient\\install\\hdbuninst.exe') do
-  it { should be_file }
+  def cache
+    Chef::Config[:file_cache_path]
+  end
 end
