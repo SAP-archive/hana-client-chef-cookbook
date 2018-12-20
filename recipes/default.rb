@@ -2,7 +2,7 @@
 # Cookbook Name:: hana-client
 # Recipe:: default
 #
-# Copyright 2016, SAP
+# Copyright 2019, SAP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,39 +17,13 @@
 # limitations under the License.
 #
 
-# Some vars for readability
-destination = node['hana-client']['root_install_folder']
-extract_to_dir = Chef::Config[:file_cache_path] + '/sap_temp'
-local_installer = extract_to_dir + '/SAP_HANA_CLIENT/hdbinst.exe'
-
-# Get current state
-extracted_client = extract_to_dir + '/SAP_HANA_CLIENT'
-uninstaller = "#{destination}/hdbclient/install/hdbuninst.exe"
-
 # If requested, uninistall previous HANA client versions.
-hana_client 'Uninstall clients from ' + node['hana-client']['root_install_folder'] do
-  name node['hana-client']['root_install_folder']
+hana_client node['hana-client']['destination'] do
   action :uninstall
-  only_if { node['hana-client']['uninstall_reinstall'] }
-end
+end if node['hana-client']['clean']
 
-# Extract the SAR file
-hana_client_sap_media extract_to_dir do
-  remote_path node['sap']['hanaclient']
-  sapcar node['sap']['sapcar']
-  action :extract
-  not_if { ::Dir.exist?(extracted_client) || ::File.exist?(uninstaller) }
-end
-
-# Install the client from the extracted SAR
-hana_client 'Install client to ' + destination do
-  name destination
-  installer local_installer
+# Install the hana client from a sar package
+hana_client node['hana-client']['destination'] do
+  source node['hana-client']['package']
   action :install
-end
-
-# Cleanup the installer source file.
-directory extract_to_dir do
-  recursive true
-  action :delete
 end
