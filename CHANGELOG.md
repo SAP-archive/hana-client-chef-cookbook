@@ -3,6 +3,11 @@ hana-client CHANGELOG
 
 This file is used to list changes made in each version of the hana-client cookbook.
 
+2.0.0
+-----
+
+- Dan-Joe - BREAKING CHANGE - update to reflect lack of support for chef 11.
+
 1.1.0
 -----
 
