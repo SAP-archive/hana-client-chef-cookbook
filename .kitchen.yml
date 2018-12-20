@@ -24,7 +24,7 @@ driver:
 provisioner:
   name: chef_zero
   product_name: chef
-  product_verion: 14
+  product_verion: 12
 
 verifier:
   name: inspec

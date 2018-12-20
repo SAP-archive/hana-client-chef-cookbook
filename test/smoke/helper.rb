@@ -22,18 +22,18 @@ def kitchen_user
 end
 
 def cache
-  "c:\\Users\\#{kitchen_user}\\AppData\\Local\\Tmp\\kitchen\\cache"
-  '/tmp/kitchen/cache' unless os.windows?
+  return "c:\\Users\\#{kitchen_user}\\AppData\\Local\\Tmp\\kitchen\\cache" if os.windows?
+  '/tmp/kitchen/cache'
 end
 
 def sapcar_path
-  'c:\Windows\System32'
-  '/usr/sbin' unless os.windows?
+  return 'c:\Windows\System32' if os.windows?
+  '/usr/sbin'
 end
 
 def hana_client_path
-  'c:\sap'
-  '/opt/sap' unless os.windows?  
+  return 'c:\sap' if os.windows?
+  '/opt/sap'
 end
 
 def hana_client_uninstaller
@@ -41,11 +41,11 @@ def hana_client_uninstaller
 end
 
 def sar_file
-  'SAP_HANA_CLIENT100_101_Windows_Server_on_x86_64.SAR'
-  'SAP_HANA_CLIENT100_101_Linux_on_x86_64.SAR' unless os.windows?
+  return 'SAP_HANA_CLIENT100_101_Windows_Server_on_x86_64.SAR' if os.windows?
+  'SAP_HANA_CLIENT100_101_Linux_on_x86_64.SAR'
 end
 
 def platform_exec(file)
-  file + '.exe'
-  file unless os.windows?
+  return file + '.exe' if os.windows?
+  file
 end

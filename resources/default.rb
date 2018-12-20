@@ -17,9 +17,9 @@
 # limitations under the License.
 #
 
-property :destination, String, name_attribute: true, desired_state: false
-property :source, String, desired_state: false
-property :extractor, String, default: node['sap']['sapcar'], desired_state: false
+property :destination, String, name_property: true,            desired_state: false
+property :source,      String,                                 desired_state: false
+property :extractor,   String, default: node['sap']['sapcar'], desired_state: false
 
 alias_method :installer, :destination
 
@@ -60,7 +60,7 @@ end
 # Methods to help out readability of the action block
 action_class do
   include ::Helpers # Shared methods for resources
-  
+
   # methods that are private to this resource
   def sap_media_dir
     ::File.join(cache, 'sap_media')

@@ -28,7 +28,7 @@
 
 resource_name :sap_media
 
-property :pgk_destination,          String,        name_attribute: true
+property :pgk_destination,          String,        name_property: true
 property :pkg_source,               String,        desired_state: false
 property :remote_sapcar_executable, String,        desired_state: false
 
@@ -38,7 +38,7 @@ alias_method :remote_path, :pkg_source
 alias_method :sapcar, :remote_sapcar_executable
 
 load_current_value do |desired_state|
-  current_value_does_not_exist! unless (::Dir.exist?(desired_state.pgk_destination) && !::Dir.entries(desired_state.pgk_destination).empty?)
+  current_value_does_not_exist! unless ::Dir.exist?(desired_state.pgk_destination) && !::Dir.entries(desired_state.pgk_destination).empty?
 end
 
 action :extract do

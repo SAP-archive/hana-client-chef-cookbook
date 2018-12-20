@@ -35,11 +35,11 @@ control 'SAP HANA client' do
   desc '
     These tests verify that the client is installed.
   '
-  
+
   describe file(hana_client_path) do
     it { should be_directory }
   end
-  
+
   describe file(hana_client_uninstaller) do
     it { should be_file }
   end

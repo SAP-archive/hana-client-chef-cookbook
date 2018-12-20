@@ -1,4 +1,5 @@
 # hana-client Cookbook
+
 This cookbook installs the specified version of the SAP HANA Client on a windows
 machine.  Just plug in the location of your `SAPCAR.exe` extractor, and the SAR
 package.
@@ -22,7 +23,9 @@ SAP's internal cloud and AWS as noted below.
 
 
 ## Attributes <a name="attributes"></a>
+
 ### Basic & Required
+
 You need to provide these values to the cookbook so that it can install the
 client on your system.  You may have specified these values as a part of
 another cookbook.
@@ -33,6 +36,7 @@ another cookbook.
 | `['hana-client']['package']` | String  | The complete URL to the SAP SAR package for the HANA client to be installed   | N/A       |
 
 ### Advanced & Optional
+
 These attributes are used to fine tune the installation.
 
 |                    Key                   |   Type  |                                  Description                                  |  Default  |
@@ -41,29 +45,38 @@ These attributes are used to fine tune the installation.
 | `['hana-client']['uninstall_resintall']` | Boolean | Signals the removal of any existing HANA clients in the `destination` | `false`   |
 
 ## Resource/Provider
+
 ### hana-client
+
 #### Actions
+
  - `:install`
  - `:uninstall`
 
 Use the actions to install or remove an installation of the client to or from
 the specified location.  `uninstall` removes any HANA client(s) found in the
 root path.
+
 ##### Example
+
 ```ruby
 hana_client "C:\\Root\\Path\\To\\Install\\hana-clientent\\" do
   installer "C:\\Path\\To\\Extracted\\Installer\\hdbinst.exe"
   action :install
 end
 ```
+
 ```ruby
 hana_client "C:\\Root\\Path\\To\\Finhana-clientent\\" do
   action :uninstall
 end
 ```
+
 ### hana_client_sap_media
+
 Use `hana_client_sap_media` to extract an SAP SAR file to a specific location.
 ##### Example
+
 ```ruby
 hana_client_sap_media "Source.SAR" do
   remote_path "Destination for extracted files"
@@ -72,24 +85,28 @@ end
 ```
 
 ## Usage
+
 ### hana-client::default
 
 So you want to install the HANA client?  In addition to the resources
 provided above, you can use this cookbook's *default* recipe to install the SAP
 HANA Client.  Here's how:
+
 1. Depend on me (in your `metadata.rb`).
+
 ```ruby
 depends 'hana-client'
 ```
 
 - Tell me about your files (where to find them) and options (using
   [attributes](#attributes)).
- - **[REQUIRED]**: Location of SAPCAR.
- - **[REQUIRED]**: Location of the SAR package you want.
- - [OPTIONAL]: Change the default installation directory.
- - [OPTIONAL]: Set the reinstall flag to remove any previous client.
+  - **[REQUIRED]**: Location of SAPCAR.
+  - **[REQUIRED]**: Location of the SAR package you want.
+  - [OPTIONAL]: Change the default installation directory.
+  - [OPTIONAL]: Set the reinstall flag to remove any previous client.
 
 - Include `hana-client` in your node's `run_list`:
+
 ```json
 {
   "name":"my_node",
@@ -99,17 +116,10 @@ depends 'hana-client'
 }
 ```
 
-## Contributing
-Contributions are welcomed!
-
-1. Fork the repo
-2. Create a feature branch (like `add_component_x`)
-3. Write your change
-4. Test your change
-5. Submit a Pull Request using Github
-
 ## License and Authors
+
 ### Authors
+
 - Emmanuel Iturbide (e.iturbide@sap.com)
 - Dan-Joe Lopez (Dan-Joe.Lopez@sap.com)
 
