@@ -1,0 +1,19 @@
+{
+    "name": "SAP Chef Developer Workstation",
+    "image": "docker.wdf.sap.corp:50000/tools/sap-chef-workstation:latest",
+    "runArgs": [ "--privileged=true", "-v", "${env:DEV_HOME}/.ssh:/root/.sshmount:ro", "-v", "${env:DEV_HOME}/.config:/root/.config" ],
+    "settings": {
+                    "terminal.integrated.shell.linux": "/bin/bash"
+    },
+    "postCreateCommand": "/bin/ssh_setup.sh",
+    "extensions": [
+                    "ms-vsliveshare.vsliveshare",
+                    "gioboa.jira-plugin",
+                    "eamodio.gitlens",
+                    "walkme.ruby-extension-pack",
+                    "rebornix.Ruby",
+                    "labocho.chef-encrypted-data-bag",
+                    "chef-software.chef",
+                    "burtlo.inspec",
+    ]
+}
