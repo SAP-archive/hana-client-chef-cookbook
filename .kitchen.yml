@@ -17,24 +17,43 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
 driver:
-  name: docker
+  name: gce
+  project:      <%= ENV['GCP_PROJECT'] %>
+  zone:         <%= ENV['GCP_ZONE'] %>
+  email:        <%= ENV['GCP_EMAIL'] %>
+  machine_type: n1-standard-1
+  service_account_scopes:
+  - servicecontrol
+  - service.management.readonly
+  - logging.write
+  - monitoring.write
+  - trace.append
+  - devstorage.read_only
+    
+transport:
+  username: <%= ENV['GCP_USER'] %>
+  ssh_key:  <%= ENV['GCP_SSH_KEY'].tr('\\','/') %>
 
 provisioner:
   name: chef_zero
   product_name: chef
-  product_verion: 12
+  chef_license: accept
 
 verifier:
   name: inspec
 
 platforms:
-  - name: ubuntu-14.04
-  - name: ubuntu-16.04
-  - name: opensuse-42.2
-  - name: centos-7
-  - name: centos-6
+<% %w(15 16).each do |chef_ver| %>
+  <% %w(2012-r2 2012-r2-core 2016 2016-core 2019 2019-core 2019-for-containers 2019-core-for-containers).each do |win_ver| %>
+  - name: <%= "win-#{win_ver}-#{chef_ver}" %>
+    driver_config:
+      image_project: windows-cloud
+      image_family: windows-<%= win_ver %>
+      disk_size: 80
+    provisioner:
+      product_version: <%= chef_ver %><% end %>
+<% end %>
 
 suites:
   - name: hc101
@@ -42,9 +61,9 @@ suites:
       - recipe[hana-client]
     attributes:
       sap:
-        sapcar: http://moo-repo.wdf.sap.corp:8080/static/lit/hana/newdb/SAPCAR #"https://s3-us-west-1.amazonaws.com/sap-opensource-demo/SAPCAR.EXE"
+        sapcar:  https://storage.googleapis.com/cookbook_dev_share/opensource_test_djl/SAPCAR_721-20010453.EXE
       hana-client:
-        package: http://moo-repo.wdf.sap.corp:8080/static/lit/hana/newdb/1.0.101/SAP_HANA_CLIENT100_101_Linux_on_x86_64.SAR #"https://s3-us-west-1.amazonaws.com/sap-opensource-demo/SAP_HANA_CLIENT100_101_Windows_Server_on_x86_64.SAR"
+        package: https://storage.googleapis.com/cookbook_dev_share/opensource_test_djl/win/IMDB_CLIENT100_120_50-10009664.SAR
     verifier:
       inspec_tests:
         - test/smoke/hc101
