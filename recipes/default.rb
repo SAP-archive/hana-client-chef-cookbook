@@ -1,8 +1,8 @@
 #
-# Cookbook Name:: hana-client
+# Cookbook:: hana-client
 # Recipe:: default
 #
-# Copyright 2019, SAP
+# Copyright:: 2019, SAP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
