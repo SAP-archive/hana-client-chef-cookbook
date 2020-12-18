@@ -1,8 +1,8 @@
 #
-# Cookbook Name:: hana-client
+# Cookbook:: hana-client
 # Resource:: default (hana_client)
 #
-# Copyright 2019, SAP
+# Copyright:: 2019, SAP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,77 +17,75 @@
 # limitations under the License.
 #
 
-property :destination, String, name_property: true,            desired_state: false
-property :source,      String,                                 desired_state: false
-property :extractor,   String, default: node['sap']['sapcar'], desired_state: false
+property :destination, String, name_property: true
+property :source,      String
+property :extractor,   String, default: node['sap']['sapcar']
 
 alias_method :installer, :destination
 
-load_current_value do |resource_attributes|
-  current_value_does_not_exist! unless ::File.exist?(hana_cli_uninstaller(resource_attributes.destination))
+load_current_value do |desired|
+  destination '' unless ::Dir.exist?(desired.destination) && ::File.exist?("#{desired.destination}/install/hdbuninst.exe")
 end
 
 action :install do
-  converge_if_changed do
-    # Extract the SAR
-    sap_media sap_media_dir do
-      pkg_source new_resource.source
-      remote_sapcar_executable new_resource.extractor
+  converge_if_changed :destination do
+    temp_extract_dir = "#{Chef::Config[:file_cache_path]}\\sap_temp"
+    installer_file = temp_extract_dir + '\SAP_HANA_CLIENT\hdbinst.exe'
+
+    # Extract the remote installer
+    hana_studio_remote_package temp_extract_dir do
+      source new_resource.source
+      creates installer_file
+      extractor new_resource.extractor if new_resource.extractor
       action :extract
+    end
+
+    execute 'dir' do
+      live_stream true
+    end
+    execute 'dir' do
+      cwd temp_extract_dir + '\SAP_HANA_CLIENT'
+      live_stream true
     end
 
     # Install the client
     execute "Install HANA Client: #{new_resource.destination}" do
-      cwd hana_cli_install_root
-      command "#{hana_cli_installer} --batch --path=\"#{new_resource.destination}/hdbclient\""
+      cwd temp_extract_dir + '\SAP_HANA_CLIENT'
+      command "hdbinst.exe --batch --path=\"#{new_resource.destination}\""
+      live_stream true
       timeout 86_400
       action :run
-      notifies :delete, "sap_media[#{sap_media_dir}]", :immediately
+    end
+
+    directory temp_extract_dir do
+      recursive true
+      action :delete
     end
   end
 end
 
-action :uninstall do # uninstalls all clients from the destination directory
-  subdirs(new_resource.destination).each do |sub_dir|
-    pwd = ::File.join(sub_dir.to_s)
+action :uninstall do # uninstalls client from the destination directory(ies)
+  [new_resource.destination].flatten.each do |path| # force to an array and flatten in case it already was
+    pwd = ::File.join(path.to_s)
+    next unless ::File.exist?(hana_cli_uninstaller(pwd)) && !path['hdbclient'].nil?
+
     execute "Uninstall #{pwd}" do
-      command "\"#{hana_cli_uninstaller(pwd)}\" --batch --path=\"#{new_resource.destination}/#{sub_dir}\""
-      only_if { ::File.exist?(hana_cli_uninstaller(pwd)) && !sub_dir['hdbclient'].nil? }
+      command "\"#{hana_cli_uninstaller(pwd)}\" --batch --path=\"#{new_resource.destination}\""
     end
   end if ::Dir.exist?(new_resource.destination)
 end
 
 # Methods to help out readability of the action block
 action_class do
-  include ::Helpers # Shared methods for resources
-
-  # methods that are private to this resource
-  def sap_media_dir
-    ::File.join(cache, 'sap_media')
+  def hana_cli_uninstaller(client_path)
+    uninstaller = ::File.join(client_path, 'install', 'hdbuninst')
+    uninstaller += '.exe' if platform_family?('windows')
+    uninstaller
   end
 
-  def hana_cli_install_root
-    ::File.join(sap_media_dir, 'SAP_HANA_CLIENT')
+  def subdirs(directory)
+    require 'pathname'
+    contents = Pathname(directory).children
+    contents.select(&:directory?)
   end
-
-  def hana_cli_installer
-    installer = ::File.join(hana_cli_install_root, 'hdbinst')
-    add_ext(installer)
-  end
-end
-
-# A few more methods that needed outside of te action block
-def hana_cli_uninstaller(client_path)
-  uninstaller = ::File.join(client_path, 'hdbclient', 'install', 'hdbuninst')
-  add_ext(uninstaller)
-end
-
-def add_ext(file)
-  node['os'] == 'windows' ? file + '.exe' : file
-end
-
-def subdirs(directory)
-  require 'pathname'
-  contents = Pathname(directory).children
-  contents.select(&:directory?)
 end

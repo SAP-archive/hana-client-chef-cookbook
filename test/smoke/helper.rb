@@ -1,8 +1,8 @@
 #
-# Cookbook Name:: hana-client
+# Cookbook:: hana-client
 # Kitchen:: docker linux
 #
-# Copyright 2019, SAP
+# Copyright:: 2019, SAP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ def cache
 end
 
 def sapcar_path
-  return 'c:\Windows\System32' if os.windows?
+  return 'c:\Windows' if os.windows?
   '/usr/sbin'
 end
 
