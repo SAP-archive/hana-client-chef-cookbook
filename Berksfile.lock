@@ -1,0 +1,11 @@
+DEPENDENCIES
+  hana-client
+    path: .
+    metadata: true
+
+GRAPH
+  hana-client (3.0.1)
+    hana-studio (~> 2.0)
+  hana-studio (2.0.2)
+    windows (>= 0.0.0)
+  windows (7.0.2)
