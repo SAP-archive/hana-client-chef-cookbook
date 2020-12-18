@@ -1,7 +1,7 @@
 #
-# Cookbook Name:: hana-client
+# Cookbook:: hana-client
 #
-# Copyright 2019, SAP
+# Copyright:: 2019, SAP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ default['hana-client']['package'] = nil
 #########################
 
 # This is where the hana client will live on your system.
-default['hana-client']['destination'] = node['os'] == 'windows' ? 'C:\sap' : '/opt/sap'
+default['hana-client']['destination'] = platform_family?('windows') ? 'C:\sap\hdbclient' : '/opt/sap/hdbclient'
 
 # Signals the removal of any existing hana clients in the install folder.
 default['hana-client']['clean'] = false
