@@ -9,30 +9,29 @@ need to provide a download location for SAPCAR and the SAR package.
 
 ## Supports
 
-This cookbooks supports the following windows versions, and has been tested on
-SAP's internal cloud and AWS as noted below.
+This cookbooks supports the following windows versions, having been tested on
+the following GCP Public Images.
 
-|            OS          | Internally Tested | AWS EC2 Tested |
-| ---------------------- | ----------------- | -------------- |
-| Windows Server 2008    |         ⃠        |        ✓       |
-| Windows Server 2008 R2 |         ✓        |        ✓       |
-| Windows Server 2012    |         ⃠        |        ✓       |
-| Windows Server 2012 R2 |         ✓        |        ✓       |
-| Windows Server 2016 TP |         ✓        |        ⃠       |
-| Windows 10             |         ✓        |        ⃠       |
+ * Windows Server 2012 R2
+ * Windows Server 2012 R2 Core
+ * Windows Server 2016
+ * Windows Server 2016 Core
+ * Windows Server 2019
+ * Windows Server 2019 Core
+ * Windows Server 2019 for Containers
+ * Windows Server 2019 Core for Containers
 
-
-## Attributes <a name="attributes"></a>
+## Attributes
 
 ### Basic & Required
 
-You need to provide these values to the cookbook so that it can install the
-client on your system.  You may have specified these values as a part of
-another cookbook.
+When using the cookbook's default recipe, you need to provide these
+values to the cookbook so that it can install the client on your
+system.  You may have specified these values as a part of another cookbook.
 
-|            Key          |   Type  |                                  Description                                  |  Default  |
-|-------------------------|---------|-------------------------------------------------------------------------------|-----------|
-| `['sap']['sapcar']`     | String  | The URL to the SAPCAR executable to be used for extracting the SAP package    | N/A       |
+|              Key             |   Type  |                                  Description                                  |  Default  |
+|------------------------------|---------|-------------------------------------------------------------------------------|-----------|
+| `['sap']['sapcar']`          | String  | The URL to the SAPCAR executable to be used for extracting the SAP package    | N/A       |
 | `['hana-client']['package']` | String  | The complete URL to the SAP SAR package for the HANA client to be installed   | N/A       |
 
 ### Advanced & Optional
@@ -41,11 +40,12 @@ These attributes are used to fine tune the installation.
 
 |                    Key                   |   Type  |                                  Description                                  |  Default  |
 |------------------------------------------|---------|-------------------------------------------------------------------------------|-----------|
-| `['hana-client']['destination']` | String  | This is where the HANA client will live on your system.                       | `c:\sap` |
-| `['hana-client']['uninstall_resintall']` | Boolean | Signals the removal of any existing HANA clients in the `destination` | `false`   |
+| `['hana-client']['destination']`         | String  | This is where the HANA client will live on your system.                       | `c:\sap`  |
+| `['hana-client']['uninstall_resintall']` | Boolean | Signals the removal of any existing HANA clients in the `destination`         | `false`   |
 
-## Resource/Provider
-
+## Custom Resource
+If you would like greater control over the installation, you can use the following custom
+resources in your cookbooks directly
 ### hana-client
 
 #### Actions
@@ -61,59 +61,15 @@ root path.
 
 ```ruby
 hana_client "C:\\Root\\Path\\To\\Install\\hana-clientent\\" do
-  installer "C:\\Path\\To\\Extracted\\Installer\\hdbinst.exe"
+  soruce "URI:://to.download/the/package.sar"
   action :install
 end
 ```
 
 ```ruby
-hana_client "C:\\Root\\Path\\To\\Finhana-clientent\\" do
+hana_client "C:\\Root\\Path\\To\\Find\\hana-clientent\\" do
   action :uninstall
 end
-```
-
-### hana_client_sap_media
-
-Use `hana_client_sap_media` to extract an SAP SAR file to a specific location.
-##### Example
-
-```ruby
-hana_client_sap_media "Source.SAR" do
-  remote_path "Destination for extracted files"
-  sapcar "URL://of.SAPCAR/for/extraction"
-end
-```
-
-## Usage
-
-### hana-client::default
-
-So you want to install the HANA client?  In addition to the resources
-provided above, you can use this cookbook's *default* recipe to install the SAP
-HANA Client.  Here's how:
-
-1. Depend on me (in your `metadata.rb`).
-
-```ruby
-depends 'hana-client'
-```
-
-- Tell me about your files (where to find them) and options (using
-  [attributes](#attributes)).
-  - **[REQUIRED]**: Location of SAPCAR.
-  - **[REQUIRED]**: Location of the SAR package you want.
-  - [OPTIONAL]: Change the default installation directory.
-  - [OPTIONAL]: Set the reinstall flag to remove any previous client.
-
-- Include `hana-client` in your node's `run_list`:
-
-```json
-{
-  "name":"my_node",
-  "run_list": [
-    "recipe[hana-client]"
-  ]
-}
 ```
 
 ## License and Authors

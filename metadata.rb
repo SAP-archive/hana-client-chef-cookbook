@@ -10,8 +10,6 @@ chef_version     '>= 15'
 issues_url       'https://github.com/SAP/hana-client-chef-cookbook/issues'
 source_url       'https://github.com/SAP/hana-client-chef-cookbook'
 
-%w( centos redhat suse opensuse windows ).each do |os|
-  supports os
-end
+supports 'windows'
 
 depends 'hana-studio', '~>2.0'

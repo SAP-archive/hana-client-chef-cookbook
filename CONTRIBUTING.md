@@ -3,7 +3,9 @@
 Contributions are welcomed!
 
 1. Fork or branch for your change
-1. Write your tests and improvements
+1. Write your tests
+1. Write your improvements
+1. Test yoru changes
 1. Submit a Pull Request
 1. Review your changes with the code maintainer
 
