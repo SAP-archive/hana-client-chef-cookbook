@@ -1,5 +1,7 @@
 # hana-client Cookbook
 
+[![REUSE status](https://api.reuse.software/badge/github.com/SAP/hana-client-chef-cookbook)](https://api.reuse.software/info/github.com/SAP/hana-client-chef-cookbook)
+
 This cookbook installs the specified version of the SAP HANA Client on a windows
 machine.  Just plug in the location of your `SAPCAR.exe` extractor, and the SAR
 package.
@@ -81,7 +83,7 @@ end
 
 ### License
 
-Copyright 2019, SAP
+Copyright 2016-2021 SAP SE or an SAP affiliate company and hana-client-chef-cookbook contributors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -94,3 +96,5 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+
+Detailed information including third-party components and their licensing/copyright information is available [via the REUSE tool](https://api.reuse.software/info/github.com/SAP/hana-client-chef-cookbook).
